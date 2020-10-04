@@ -165,6 +165,12 @@
 
         </LinearLayout>
 
+        <Button
+            android:layout_width="wrap_content"
+            android:id="@+id/testAnimationEndListenerButton"
+            android:text="Test animation end listener"
+            android:layout_height="wrap_content"/>
+
     </LinearLayout>
 
 </LinearLayout>

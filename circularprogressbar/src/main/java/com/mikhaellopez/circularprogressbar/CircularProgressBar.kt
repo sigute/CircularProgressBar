@@ -1,5 +1,7 @@
 package com.mikhaellopez.circularprogressbar
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.animation.TimeInterpolator
 import android.animation.ValueAnimator
 import android.content.Context
@@ -312,7 +314,8 @@ class CircularProgressBar(context: Context, attrs: AttributeSet? = null) : View(
     fun setProgressWithAnimation(progress: Float,
                                  duration: Long? = null,
                                  interpolator: TimeInterpolator? = null,
-                                 startDelay: Long? = null) {
+                                 startDelay: Long? = null,
+                                 onAnimationEnd: (() -> Unit)? = null) {
         progressAnimator?.cancel()
         progressAnimator = ValueAnimator.ofFloat(if (indeterminateMode) progressIndeterminateMode else this.progress, progress)
         duration?.also { progressAnimator?.duration = it }
@@ -327,6 +330,13 @@ class CircularProgressBar(context: Context, attrs: AttributeSet? = null) : View(
                             if (progressDirectionIndeterminateMode.isToRight()) updateAngle else -updateAngle
                 }
             }
+        }
+        onAnimationEnd?.let {
+            progressAnimator?.addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator) {
+                    onAnimationEnd()
+                }
+            })
         }
         progressAnimator?.start()
     }
